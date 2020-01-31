@@ -1,0 +1,86 @@
+<!--
+    Build by Elliot
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dev</title>
+        <meta charset="utf-8">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://unpkg.com/naranja@1.0.1/lib/naranja.min.css">
+        <script src="https://unpkg.com/naranja@1.0.1/lib/naranja.min.js"></script>
+        <script type="text/javascript">
+            function narn() {
+                naranja()['{{sign}}']({
+                    title: '{{title}}',
+                    text: '{{text}}',
+                    timeout: 'keep',
+                    buttons: [{
+                        text: '我这就改',
+                        click: function (e) {
+                            naranja().success({
+                                title: '消息已确认',
+                                text: ''
+                            })
+                        }
+                    }, {
+                        text: '给爷爬',
+                        click: function (e) {
+                            e.closeNotification()
+                        }
+                    }]
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default bg-dark navbar-dark sticky-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/manage">Dashboard</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a style='color:silver' href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <br/><br/>
+            <form class="form" method="post">
+                <div class="form-group">
+                    项目名：
+                    <label><input name="name" type="text" class="form-control" id="name" value="{{name}}"/></label>
+                    <br/><br/>
+                    构建环境:<br/>
+                    <code><label><textarea name="env" class="form-control form-control-lg" rows="5" cols="50">{{env}}</textarea></label></code>
+                    <br/><br/>
+                    <label for="build">构建脚本:</label>
+                    <code><input name="build" class="form-control col-6" id='build' value="{{build}}"/><br/></code>
+                    <label for="test">测试脚本:</label>
+                    <code><input name="test" class="form-control col-6" id="test" value="{{test}}"/><br/></code>
+                    <label for="release">发布脚本:</label>
+                    <code><input name="release" class="form-control col-6" id="release" value="{{release}}"/><br/></code>
+                    构建条件：
+                    <code><label><select class="form-control " name="condition">
+                        <option value="0">随api请求</option>
+                        <!--
+                        <option value="1">每日</option>
+                        <option value="3">每3日</option>
+                        <option value="7">每周</option>
+                        -->
+                </select></label></code>
+                </div>
+                <button type="submit" class="btn btn-success">提交</button>
+            </form>
+        </div>
+        <script>narn()</script>
+    </body>
+    <footer class="navbar-fixed-bottom">
+        <div class="container text-black-50 text-sm-center">
+            <small>
+                <p>Designed by Elliot</p>
+            </small>
+        </div>
+    </footer>
+</html>

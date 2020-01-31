@@ -1,0 +1,47 @@
+<!--
+    Build by Elliot
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="utf-8">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    </head>
+    <nav class="navbar navbar-default bg-dark navbar-dark" role="navigation">
+	    <div class="container-fluid">
+	        <div class="navbar-header">
+		        <a class="navbar-brand" href="/">Dashboard</a>
+	        </div>
+	    </div>
+    </nav>
+    <body>
+        <div class="container">
+            <br/><br/>
+            <h2>登录</h2>
+            <br/>
+            {% if code == 'err' %}
+            <div class="alert alert-danger">
+                <strong>登陆失败！</strong> 用户名/密码错误
+            </div>
+            {% endif %}
+            <form class="form" method="post">
+                <div class="form-group">
+                    <label for="user">账号:</label>
+                    <input name="username" type="text" class="form-control" id="user" placeholder="username"/><br/>
+                    <label for="pwd">密码:</label>
+                    <input name="password" type="password" class="form-control" id="pwd" placeholder="password"/><br/>
+                </div>
+                <button type="submit" class="btn btn-success">登录</button>
+            </form>
+        </div>
+    </body>
+    <footer class="navbar-fixed-bottom">
+		<div class="container text-black-50 text-sm-center">
+			<small>
+				<p>Designed by Elliot</p>
+			</small>
+		</div>
+	</footer>
+</html>

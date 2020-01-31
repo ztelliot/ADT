@@ -1,0 +1,228 @@
+<!--
+    Build by Elliot
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Dev</title>
+      <meta charset="utf-8">
+	  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <script src="https://lib.baomitu.com/echarts/4.6.0/echarts.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default bg-dark navbar-dark sticky-top" role="navigation">
+	    <div class="container-fluid">
+	        <div class="navbar-header">
+		        <a class="navbar-brand" href="/manage">Dashboard</a>
+	        </div>
+		    <ul class="nav navbar-nav">
+			    <li class="active"><a style='color:silver' href="/logout">Logout</a></li>
+		    </ul>
+        </div>
+    </nav>
+    <div class="container my-4 py-4">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 px-4">
+                <div class="card card-style-4">
+                    <div class="card-body">
+                        <div class="d-flex pt-3 pb-2">
+                            <h5 class="card-title">服务状态</h5>
+                            <div id="status"></div>
+                            <script>
+                                if ('{{sta}}' === 'online'){
+                                        document.getElementById("status").innerHTML="Online";
+                                        document.getElementById("status").className='ml-auto text-success'
+                                }
+                                else{
+                                    document.getElementById("status").innerHTML="Offline";
+                                    document.getElementById("status").className='ml-auto text-danger'
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 px-4">
+                <div class="card card-style-4">
+                    <div class="card-body">
+                        <div class="d-flex pt-3 pb-2">
+                            <h5 class="card-title">项目总数</h5>
+                            <div class="ml-auto text-info">{{num}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 px-4">
+                <div class="card card-style-4">
+                    <div class="card-body">
+                        <div class="d-flex pt-3 pb-2">
+                            <h5 class="card-title">用户名</h5>
+                            <div class="ml-auto text-muted">{{usr}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-4 py-4">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-6 px-4">
+                <div class="card card-style-5 row">
+                    <div class="col-sm-8 col-12 py-4">
+                        <div id="build" style="height: 180%;width: 150%">
+                            <script type="text/javascript">
+                                var build = {{build}};
+                                var num = {{num}}
+                                var dom = document.getElementById("build");
+                                var myChart = echarts.init(dom);
+                                var app = {};
+                                option = null;
+                                var option = {
+                                    color: ['green', 'red'],
+                                    legend: {},
+                                    tooltip: {},
+                                    dataset: {
+                                        source: [
+                                            ['Build', 'time'],
+                                            ['Succeed', build],
+                                            ['Failed', num-build]
+                                        ]
+                                    },
+                                    series: [{
+                                        type: 'pie',
+                                        radius: 60,
+                                        center: ['50%', '60%']
+                                    }]
+                                };
+                                if (option && typeof option === "object") {
+                                    myChart.setOption(option, true);
+                                }
+                            </script>
+                            <p>Build <span class="text-success">Success</span> Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-6 px-4">
+                <div class="card card-style-5 row">
+                    <div class="col-sm-8 col-12 py-4">
+                        <div id="test" style="height: 180%;width: 150%">
+                            <script type="text/javascript">
+                                var test = {{test}};
+                                var num = {{num}}
+                                var dom = document.getElementById("test");
+                                var myChart = echarts.init(dom);
+                                var app = {};
+                                option = null;
+                                var option = {
+                                    color: ['green', 'red'],
+                                    legend: {},
+                                    tooltip: {},
+                                    dataset: {
+                                        source: [
+                                            ['Test', 'time'],
+                                            ['Succeed', test],
+                                            ['Failed', num-test]
+                                        ]
+                                    },
+                                    series: [{
+                                        type: 'pie',
+                                        radius: 60,
+                                        center: ['50%', '60%']
+                                    }]
+                                };
+                                if (option && typeof option === "object") {
+                                    myChart.setOption(option, true);
+                                }
+                            </script>
+                            <p>Test <span class="text-success">Success</span> Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-4 py-4">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-6 px-4">
+                <div class="card card-style-5 row">
+                    <div class="col-sm-8 col-12 py-4">
+                        <div id="cpu" style="height: 180%;width: 150%">
+                            <script type="text/javascript">
+                                var cpu = {{cpu}};
+                                var dom = document.getElementById("cpu");
+                                var myChart = echarts.init(dom);
+                                var app = {};
+                                option = null;
+                                var option = {
+                                    legend: {},
+                                    tooltip: {},
+                                    dataset: {
+                                        source: [
+                                            ['CPU', 'time'],
+                                            ['Used', cpu],
+                                            ['Free', 100-cpu]
+                                        ]
+                                    },
+                                    series: [{
+                                        type: 'pie',
+                                        radius: 60,
+                                        center: ['50%', '60%']
+                                    }]
+                                };
+                                if (option && typeof option === "object") {
+                                    myChart.setOption(option, true);
+                                }
+                            </script>
+                            <p>CPU-Usage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-6 px-4">
+                <div class="card card-style-5 row">
+                    <div class="col-sm-8 col-12 py-4">
+                        <div id="mem" style="height: 180%;width: 150%">
+                            <script type="text/javascript">
+                                var mem = {{mem}};
+                                var dom = document.getElementById("mem");
+                                var myChart = echarts.init(dom);
+                                var app = {};
+                                option = null;
+                                var option = {
+                                    legend: {},
+                                    tooltip: {},
+                                    dataset: {
+                                        source: [
+                                            ['Mem', 'time'],
+                                            ['Used', mem],
+                                            ['Free', 100-mem]
+                                        ]
+                                    },
+                                    series: [{
+                                        type: 'pie',
+                                        radius: 60,
+                                        center: ['50%', '60%']
+                                    }]
+                                };
+                                if (option && typeof option === "object") {
+                                    myChart.setOption(option, true);
+                                }
+                            </script>
+                            <p>Memory-Usage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+  <footer class="navbar-fixed-bottom">
+      <div class="container text-black-50 text-sm-center">
+          <small>
+              <p>Designed by Elliot</p>
+          </small>
+      </div>
+  </footer>
+</html>

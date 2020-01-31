@@ -1,0 +1,77 @@
+<!--
+    Build by Elliot
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dev</title>
+        <meta charset="utf-8">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/naranja@1.0.1/lib/naranja.min.css">
+        <script src="https://unpkg.com/naranja@1.0.1/lib/naranja.min.js"></script>
+        <script type="text/javascript">
+            function narn() {
+                naranja()['{{sign}}']({
+                    title: '{{title}}',
+                    text: '{{text}}',
+                    timeout: 'keep',
+                    buttons: [{
+                        text: '我知道了',
+                        click: function (e) {
+                            naranja().success({
+                                title: '消息已确认',
+                                text: ''
+                            })
+                        }
+                    }, {
+                        text: '给爷爬',
+                        click: function (e) {
+                            e.closeNotification()
+                        }
+                    }]
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default bg-dark navbar-dark sticky-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Home</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a style='color:silver' href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+        <br/><br/>
+        <div class="container text-right">
+            <button class="btn btn-primary" onclick="location.href='/manage/add'">新建项目</button>
+        </div>
+        <div class="container table-responsive table-hover" style="margin: auto;width: 50%">
+            <table class="table" id="table"></table>
+            <script type="text/javascript">
+                var Obj = new XMLHttpRequest();
+                Obj.open('get', '/info');
+                Obj.send();
+                Obj.onreadystatechange = function () {
+                    if (Obj.readyState === 4 && Obj.status === 200) {
+                        console.log('数据返回成功');
+                        document.getElementById("table").innerHTML=Obj.responseText;
+                    }
+                }
+            </script>
+            <script>narn()</script>
+            <p class="text-sm-center"><small>没有项目了...</small></p>
+        </div>
+    </body>
+    <footer class="navbar-fixed-bottom">
+        <div class="container text-black-50 text-sm-center">
+            <small>
+                <p>Designed by Elliot</p>
+            </small>
+        </div>
+    </footer>
+</html>

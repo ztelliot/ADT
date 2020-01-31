@@ -1,0 +1,317 @@
+<!--
+    Build by Elliot
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dev</title>
+        <meta charset="utf-8">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://unpkg.com/naranja@1.0.1/lib/naranja.min.css">
+        <script src="https://unpkg.com/naranja@1.0.1/lib/naranja.min.js"></script>
+        <script type="text/javascript">
+            function narn() {
+                naranja()['{{sign}}']({
+                    title: '{{title}}',
+                    text: '{{text}}',
+                    timeout: 'keep',
+                    buttons: [{
+                        text: '我知道了',
+                        click: function (e) {
+                            naranja().success({
+                                title: '消息已确认',
+                                text: ''
+                            })
+                        }
+                    }, {
+                        text: '给爷爬',
+                        click: function (e) {
+                            e.closeNotification()
+                        }
+                    }]
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default bg-dark navbar-dark sticky-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/manage">Dashboard</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a style='color:silver' href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container my-4 py-4">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6 px-5">
+                    <div class="card card-style-5">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">项目名</h5>
+                                <div class="ml-auto text-muted">{{name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 px-5">
+                    <div class="card card-style-5">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">状态</h5>
+                                <div class="ml-auto text-{{code}}">{{status}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3 col-lg-2 px-2">
+                    <div class="btn-group-vertical">
+                        <button type="button" class="btn btn-info" id="build">构建</button>
+                        <button type="button" class="btn btn-success" id="tr">测试&发布</button>
+                        <button type="button" class="btn btn-danger" id="del">删除</button>
+                        <script type="text/javascript">
+                            document.querySelector('#build').onclick = function () {
+                                var Obj = new XMLHttpRequest();
+                                Obj.open('get', '/api?build={{id}}');
+                                Obj.send();
+                                Obj.onreadystatechange = function () {
+                                    if (Obj.readyState === 4 && Obj.status === 200) {
+                                        console.log('数据返回成功');
+                                        console.log(Obj.responseText);
+                                        if (Obj.responseText === 'success') {
+                                            naranja()['success']({
+                                                title: '构建成功',
+                                                text: '请刷新',
+                                                timeout: 'keep',
+                                                buttons: [{
+                                                    text: '我知道了',
+                                                    click: function (e) {
+                                                        naranja().success({
+                                                            title: '消息已确认',
+                                                            text: ''
+                                                        })
+                                                    }
+                                                    }, {
+                                                    text: '给爷爬',
+                                                    click: function (e) {
+                                                        e.closeNotification()
+                                                    }
+                                                }]
+                                            })
+                                        }
+                                        else {
+                                            naranja()['error']({
+                                                title: '构建失败',
+                                                text: '详情请查看log',
+                                                timeout: 'keep',
+                                                buttons: [{
+                                                    text: '我知道了',
+                                                    click: function (e) {
+                                                        naranja().success({
+                                                            title: '消息已确认',
+                                                            text: ''
+                                                        })
+                                                    }
+                                                    }, {
+                                                    text: '给爷爬',
+                                                    click: function (e) {
+                                                        e.closeNotification()
+                                                    }
+                                                }]
+                                            })
+                                        }
+                                    }
+                                }
+                            };
+                            document.querySelector('#tr').onclick = function () {
+                                var Obj = new XMLHttpRequest();
+                                Obj.open('get', '/api?test={{id}}&release={{id}}');
+                                Obj.send();
+                                Obj.onreadystatechange = function () {
+                                    if (Obj.readyState === 4 && Obj.status === 200) {
+                                        console.log('数据返回成功');
+                                        console.log(Obj.responseText);
+                                        if (Obj.responseText === 'success') {
+                                            naranja()['success']({
+                                                title: '成功',
+                                                text: '请刷新',
+                                                timeout: 'keep',
+                                                buttons: [{
+                                                    text: '我知道了',
+                                                    click: function (e) {
+                                                        naranja().success({
+                                                            title: '消息已确认',
+                                                            text: ''
+                                                        })
+                                                    }
+                                                    }, {
+                                                    text: '给爷爬',
+                                                    click: function (e) {
+                                                        e.closeNotification()
+                                                    }
+                                                }]
+                                            })
+                                        }
+                                        else {
+                                            naranja()['error']({
+                                                title: '失败',
+                                                text: '详情请查看log',
+                                                timeout: 'keep',
+                                                buttons: [{
+                                                    text: '我知道了',
+                                                    click: function (e) {
+                                                        naranja().success({
+                                                            title: '消息已确认',
+                                                            text: ''
+                                                        })
+                                                    }
+                                                    }, {
+                                                    text: '给爷爬',
+                                                    click: function (e) {
+                                                        e.closeNotification()
+                                                    }
+                                                }]
+                                            })
+                                        }
+                                    }
+                                }
+                            };
+                            document.querySelector('#del').onclick = function () {
+                                var Obj = new XMLHttpRequest();
+                                Obj.open('get', '/api?delete={{id}}');
+                                Obj.send();
+                                Obj.onreadystatechange = function () {
+                                    if (Obj.readyState === 4 && Obj.status === 200) {
+                                        console.log('数据返回成功');
+                                        console.log(Obj.responseText);
+                                        if (Obj.responseText === 'success') {
+                                            naranja()['success']({
+                                                title: '删除成功',
+                                                text: '请刷新',
+                                                timeout: 'keep',
+                                                buttons: [{
+                                                    text: '我知道了',
+                                                    click: function (e) {
+                                                        naranja().success({
+                                                            title: '消息已确认',
+                                                            text: ''
+                                                        })
+                                                    }
+                                                    }, {
+                                                    text: '给爷爬',
+                                                    click: function (e) {
+                                                        e.closeNotification()
+                                                    }
+                                                }]
+                                            })
+                                        }
+                                        else {
+                                            naranja()['error']({
+                                                title: '删除失败',
+                                                text: '',
+                                                timeout: 'keep',
+                                                buttons: [{
+                                                    text: '我知道了',
+                                                    click: function (e) {
+                                                        naranja().success({
+                                                            title: '消息已确认',
+                                                            text: ''
+                                                        })
+                                                    }
+                                                    }, {
+                                                    text: '给爷爬',
+                                                    click: function (e) {
+                                                        e.closeNotification()
+                                                    }
+                                                }]
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container my-4 py-4">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4 px-4">
+                    <div class="card card-style-4">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">成功构建数</h5>
+                                <div class="ml-auto text-success">{{build}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 px-4">
+                    <div class="card card-style-4">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">成功测试数</h5>
+                                <div class="ml-auto text-success">{{test}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 px-4">
+                    <div class="card card-style-4">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">成功发布数</h5>
+                                <div class="ml-auto text-success">{{release}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container my-4 py-4">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4 px-4">
+                    <div class="card card-style-4">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">构建时间</h5>
+                                <div class="ml-auto">{{bt}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 px-4">
+                    <div class="card card-style-4">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">测试时间</h5>
+                                <div class="ml-auto">{{tt}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 px-4">
+                    <div class="card card-style-4">
+                        <div class="card-body">
+                            <div class="d-flex pt-3 pb-2">
+                                <h5 class="card-title">发布时间</h5>
+                                <div class="ml-auto">{{rt}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>narn()</script>
+    </body>
+    <footer class="navbar-fixed-bottom">
+        <div class="container text-black-50 text-sm-center">
+            <small>
+                <p>Designed by Elliot</p>
+            </small>
+        </div>
+    </footer>
+</html>
