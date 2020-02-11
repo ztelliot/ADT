@@ -8,10 +8,12 @@ import psutil
 import json
 import subprocess
 import time
+from crontab import CronTab
 
 
 app = Flask(__name__)
 app.secret_key = "!@#$%^&*()"
+cron = CronTab(user='root')
 
 
 with open('config.json', 'r') as rf:
@@ -66,6 +68,10 @@ def dell(id):
         project = rf.read()
     project = eval(project)
     rf.close()
+    if project[id]['cron'] == 1:
+        cron.remove(comment=id)
+        cron.write()
+        project[id]['cron'] = 0
     i = 1
     while int(id) + i <= num:
         project[str(int(id) + i - 1)] = project[str(int(id) + i)]
@@ -208,7 +214,8 @@ def add():
                     "build_status": 0,
                     "test_status": 0,
                     "release_status": 0,
-                    "condition": build_condition
+                    "condition": build_condition,
+                    "cron": 0
                 }
                 with open('project.json', 'w') as cf:
                     cf.write(json.dumps(project))
@@ -257,7 +264,8 @@ def edit():
                 build_script = request.form.get('build')
                 test_script = request.form.get('test')
                 release_script = request.form.get('release')
-                if name:
+                build_condition = request.form.get('condition')
+                if name and build_condition:
                     project[ids]['name'] = name
                     if project[ids]['env'] != env:
                         project[ids]['initialized'] = 0
@@ -265,6 +273,12 @@ def edit():
                     project[ids]['build_script'] = build_script
                     project[ids]['test_script'] = test_script
                     project[ids]['release_script'] = release_script
+                    if project[ids]['condition'] != build_condition and project[ids]['cron'] == 1:
+                        for job in cron:
+                            if job.comment == ids:
+                                job.day.every(int(build_condition))
+                            cron.write()
+                    project[ids]['condition'] = build_condition
                     with open('project.json', 'w') as cf:
                         cf.write(json.dumps(project))
                     cf.close()
@@ -297,6 +311,12 @@ def api():
             if sta == 0:
                 project[idb]['initialized'] = 1
                 project[idb]['status'] = 'initialized'
+                condition = int(project[idb]['condition'])
+                if condition > 0:
+                    job = cron.new(command=project[idb]['build_script'], comment=idb)
+                    job.day.every(condition)
+                    cron.write()
+                    project[idb]['cron'] = 1
                 with open('logs/'+idb+'_initialize.log', 'w') as cf:
                     cf.write(out)
                 cf.close()
@@ -332,6 +352,10 @@ def api():
             project[idb]['latest_build_time'] = time.asctime()
             project[idb]['status'] = 'build_failed'
             project[idb]['build_status'] = 0
+            if project[idb]['cron'] == 1:
+                cron.remove(comment=idb)
+                cron.write()
+                project[idb]['cron'] = 0
             with open('logs/' + idb + '_build.log', 'w') as cf:
                 cf.write(out)
             cf.close()
@@ -417,6 +441,12 @@ def pub_api():
             if sta == 0:
                 project[idb]['initialized'] = 1
                 project[idb]['status'] = 'initialized'
+                condition = int(project[idb]['condition'])
+                if condition > 0:
+                    job = cron.new(command=project[idb]['build_script'], comment=idb)
+                    job.day.every(condition)
+                    cron.write()
+                    project[idb]['cron'] = 1
                 with open('logs/'+idb+'_initialize.log', 'w') as cf:
                     cf.write(out)
                 cf.close()
@@ -452,6 +482,10 @@ def pub_api():
             project[idb]['latest_build_time'] = time.asctime()
             project[idb]['status'] = 'build_failed'
             project[idb]['build_status'] = 0
+            if project[idb]['cron'] == 1:
+                cron.remove(comment=idb)
+                cron.write()
+                project[idb]['cron'] = 0
             with open('logs/' + idb + '_build.log', 'w') as cf:
                 cf.write(out)
             cf.close()
