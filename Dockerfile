@@ -12,4 +12,4 @@ ENV LC_ALL C.UTF-8
 
 COPY . .
 
-CMD [ "bash", "./start.sh" ]
+CMD [ "python3", "./main.py" ]
