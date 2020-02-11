@@ -10,3 +10,5 @@ EXPOSE 80
 
 ENV LC_ALL C.UTF-8
 ENTRYPOINT ["./docker-entrypoint.sh"]
+
+CMD [ "python3", "./main.py" ]
