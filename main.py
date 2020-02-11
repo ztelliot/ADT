@@ -1,8 +1,9 @@
 from wsgiref.simple_server import make_server
 from flaskapp import app as application
 import subprocess
+
 if __name__ == "__main__":
-    sta = subprocess.getstatus('env >> /etc/default/locale && /etc/init.d/cron start && nginx start')
+    (sta, out) = subprocess.getstatusoutput('bash start.sh')
     if sta == 0:
         print('Env Started!')
     with open('config.json', 'r') as rf:
@@ -12,5 +13,5 @@ if __name__ == "__main__":
     port = config['port']
     ip = str(config['ip'])
     httpd = make_server(ip, port, application)
-    print('Server is running on '+ip+':'+str(port))
+    print('Server is running on ' + ip + ':' + str(port))
     httpd.serve_forever()
