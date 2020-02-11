@@ -1,6 +1,9 @@
 # ADT
 Auto Dev Tool
 
+### 更新
+    2/11 支持指定时间编译
+
 ## 部署
 
    ### Docker
@@ -20,13 +23,11 @@ Auto Dev Tool
     logs存放日志文件，将被映射至容器内部
     
 ## 前端部署
-    已映射80端口，但需自行选择服务端安装
+    预安装nginx用于前端部署
     例如:
-        安装nginx用于前端部署
-            构建环境：apt install -y nginx
-            构建脚本：service nginx start && cd /var/www/html && git clone https://github.com/ziahamza/webui-aria2.git
-            进行构建
-            然后就可以通过 http://ip:web_port/webui-aria2/docs 访问
+        构建脚本：cd /var/www/html && git clone https://github.com/ziahamza/webui-aria2.git
+        进行构建
+        然后就可以通过 http://ip:web_port/webui-aria2/docs 访问
     
 ## api请求(自动构建)
     外部API请求地址为 http://ip:port/api_key/api
