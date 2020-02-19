@@ -69,8 +69,10 @@ def dell(id):
     project = eval(project)
     rf.close()
     if project[id]['cron'] == 1:
-        cron.remove(comment=id)
-        cron.write()
+        for job in cron:
+            if job.comment == id:
+                cron.remove(job)
+                cron.write()
         project[id]['cron'] = 0
     i = 1
     while int(id) + i <= num:
@@ -84,7 +86,7 @@ def dell(id):
     with open('config.json', 'w') as cf:
         cf.write(json.dumps(config))
     cf.close()
-    subprocess.getstatusoutput('rm -rf ' + id + '*')
+    subprocess.getstatusoutput('rm -rf logs/' + id + '*')
 
 
 def wrapper(func):
@@ -173,11 +175,87 @@ def info():
     return render_template('info.html')
 
 
+@app.route('/manage/logs/init')
+@wrapper
+def log_init():
+    num = get_num()
+    ids = request.args.get("id") or 0
+    if int(ids) > num:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+    if int(ids):
+        try:
+            with open('logs/'+ids+'_initialize.log', 'r') as rf:
+                log = rf.read()
+            rf.close()
+            return render_template('logs.html', log=log)
+        except:
+            return render_template('logs.html', sign='error', title='错误', text='日志打开失败')
+    else:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+
+
+@app.route('/manage/logs/build')
+@wrapper
+def log_build():
+    num = get_num()
+    ids = request.args.get("id") or 0
+    if int(ids) > num:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+    if int(ids):
+        try:
+            with open('logs/'+ids+'_build.log', 'r') as rf:
+                log = rf.read()
+            rf.close()
+            return render_template('logs.html', log=log)
+        except:
+            return render_template('logs.html', sign='error', title='错误', text='日志打开失败')
+    else:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+
+
+@app.route('/manage/logs/test')
+@wrapper
+def log_test():
+    num = get_num()
+    ids = request.args.get("id") or 0
+    if int(ids) > num:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+    if int(ids):
+        try:
+            with open('logs/'+ids+'_test.log', 'r') as rf:
+                log = rf.read()
+            rf.close()
+            return render_template('logs.html', log=log)
+        except:
+            return render_template('logs.html', sign='error', title='错误', text='日志打开失败')
+    else:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+
+
+@app.route('/manage/logs/release')
+@wrapper
+def log_release():
+    num = get_num()
+    ids = request.args.get("id") or 0
+    if int(ids) > num:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+    if int(ids):
+        try:
+            with open('logs/'+ids+'_release.log', 'r') as rf:
+                log = rf.read()
+            rf.close()
+            return render_template('logs.html', log=log)
+        except:
+            return render_template('logs.html', sign='error', title='错误', text='日志打开失败')
+    else:
+        return render_template('logs.html', sign='error', title='错误', text='参数错误')
+
+
 @app.route('/manage/add', methods=['GET', 'POST'])
 @wrapper
 def add():
     if request.method == 'GET':
-        return render_template('edit.html', name='name', env='在此键入以配置环境，Eg:apt install -y nginx', build='./build', test='./test', release='./release')
+        return render_template('edit.html', name='name', env='在此键入以配置环境，Eg:apt install -y go', build='./build', test='./test', release='./release')
     elif request.method == 'POST':
         try:
             name = request.form.get('name')
@@ -273,11 +351,25 @@ def edit():
                     project[ids]['build_script'] = build_script
                     project[ids]['test_script'] = test_script
                     project[ids]['release_script'] = release_script
-                    if project[ids]['condition'] != build_condition and project[ids]['cron'] == 1:
-                        for job in cron:
-                            if job.comment == ids:
-                                job.day.every(int(build_condition))
+                    if project[ids]['condition'] != build_condition:
+                        if project[ids]['cron'] == 1 and build_condition != 0:
+                            for job in cron:
+                                if job.comment == ids:
+                                    job.hour.every(int(build_condition) * 24)
+                                cron.write()
+                        elif project[ids]['cron'] == 1 and build_condition == 0:
+                            for job in cron:
+                                if job.comment == ids:
+                                    cron.remove(job)
+                                    cron.write()
+                            project[ids]['cron'] = 0
+                        elif project[ids]['cron'] == 0 and build_condition != 0:
+                            job = cron.new(command=project[ids]['build_script'], comment=ids)
+                            job.hour.every(condition * 24)
                             cron.write()
+                            project[ids]['cron'] = 1
+                        else:
+                            pass
                     project[ids]['condition'] = build_condition
                     with open('project.json', 'w') as cf:
                         cf.write(json.dumps(project))
@@ -314,7 +406,7 @@ def api():
                 condition = int(project[idb]['condition'])
                 if condition > 0:
                     job = cron.new(command=project[idb]['build_script'], comment=idb)
-                    job.day.every(condition)
+                    job.hour.every(condition * 24)
                     cron.write()
                     project[idb]['cron'] = 1
                 with open('logs/'+idb+'_initialize.log', 'w') as cf:
@@ -342,6 +434,12 @@ def api():
             project[idb]['latest_build_time'] = time.asctime()
             project[idb]['status'] = 'build'
             project[idb]['build_status'] = 1
+            if project[idb]['cron'] == 0:
+                for job in cron:
+                    if job.comment == idb:
+                        job.enable()
+                        cron.write()
+                project[idb]['cron'] = 1
             with open('logs/' + idb + '_build.log', 'w') as cf:
                 cf.write(out)
             cf.close()
@@ -353,8 +451,10 @@ def api():
             project[idb]['status'] = 'build_failed'
             project[idb]['build_status'] = 0
             if project[idb]['cron'] == 1:
-                cron.remove(comment=idb)
-                cron.write()
+                for job in cron:
+                    if job.comment == idb:
+                        job.enable(False)
+                        cron.write()
                 project[idb]['cron'] = 0
             with open('logs/' + idb + '_build.log', 'w') as cf:
                 cf.write(out)
@@ -444,7 +544,7 @@ def pub_api():
                 condition = int(project[idb]['condition'])
                 if condition > 0:
                     job = cron.new(command=project[idb]['build_script'], comment=idb)
-                    job.day.every(condition)
+                    job.hour.every(condition * 24)
                     cron.write()
                     project[idb]['cron'] = 1
                 with open('logs/'+idb+'_initialize.log', 'w') as cf:
@@ -472,6 +572,12 @@ def pub_api():
             project[idb]['latest_build_time'] = time.asctime()
             project[idb]['status'] = 'build'
             project[idb]['build_status'] = 1
+            if project[idb]['cron'] == 0:
+                for job in cron:
+                    if job.comment == idb:
+                        job.enable()
+                        cron.write()
+                project[idb]['cron'] = 1
             with open('logs/' + idb + '_build.log', 'w') as cf:
                 cf.write(out)
             cf.close()
@@ -483,7 +589,10 @@ def pub_api():
             project[idb]['status'] = 'build_failed'
             project[idb]['build_status'] = 0
             if project[idb]['cron'] == 1:
-                cron.remove(comment=idb)
+                for job in cron:
+                    if job.comment == idb:
+                        job.enable(False)
+                        cron.write()
                 cron.write()
                 project[idb]['cron'] = 0
             with open('logs/' + idb + '_build.log', 'w') as cf:

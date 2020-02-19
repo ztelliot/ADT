@@ -10,6 +10,7 @@ EXPOSE 80
 
 ENV LC_ALL C.UTF-8
 
+COPY index.nginx.html /var/www/html/index.html
 COPY . .
 
 CMD [ "python3", "./main.py" ]

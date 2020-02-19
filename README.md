@@ -3,16 +3,19 @@ Auto Dev Tool
 
 ### 更新
     2020/2/11 支持指定编译频率
-    待完成: 分离前后端部署、改用任务队列
-
+    2020/2/14 修复Cron删除失败、时间错误的问题
+    2020/2/16 支持简易的日志查看
+    2020/2/19 完善日志查看
+    待完成: 改用任务队列
+    
 ## 部署
 
    ### Docker
     需预先安装好Docker和docker-compose
-    git clone后在目录下执行 docker-compose -f adt.yml up -d
+    git clone后在目录下执行 docker-compose up -d
     
    ### 非Docker
-    安装 python3,python3-pip
+    安装 python3,python3-pip,cron
     CentOS下还需安装 python3-devel,gcc
     git clone后在目录下执行 pip3 install -r requirements.txt
     然后就可以 python3 main.py 运行
@@ -26,7 +29,8 @@ Auto Dev Tool
 ## 前端部署
     预安装nginx用于前端部署
     例如:
-        构建脚本：cd /var/www/html && git clone https://github.com/ziahamza/webui-aria2.git
+        构建环境：cd /var/www/html && git clone https://github.com/ziahamza/webui-aria2.git
+        构建脚本：cd /var/www/html/webui-aria2 && git pull
         进行构建
         然后就可以通过 http://ip:web_port/webui-aria2/docs 访问
     
