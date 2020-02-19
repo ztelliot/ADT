@@ -1,7 +1,0 @@
-app:
-  build: .
-  ports:
-   - "2333:2333"
-   - "8080:80"
-  volumes:
-   - ./logs:/usr/src/app/logs
