@@ -17,7 +17,7 @@
                     text: '{{text}}',
                     timeout: 'keep',
                     buttons: [{
-                        text: '我这就改',
+                        text: '我知道了',
                         click: function (e) {
                             naranja().success({
                                 title: '消息已确认',
@@ -45,32 +45,11 @@
                 </ul>
             </div>
         </nav>
-        <div class="container">
-            <br/><br/>
-            <form class="form" method="post">
-                <div class="form-group">
-                    项目名：
-                    <label><input name="name" type="text" class="form-control" id="name" value="{{name}}"/></label>
-                    <br/><br/>
-                    构建环境:<br/>
-                    <code><label><textarea name="env" class="form-control form-control-lg" rows="5" cols="50">{{env}}</textarea></label></code>
-                    <br/><br/>
-                    <label for="build">构建脚本:</label>
-                    <code><input name="build" class="form-control col-6" id='build' value="{{build}}"/><br/></code>
-                    <label for="test">测试脚本:</label>
-                    <code><input name="test" class="form-control col-6" id="test" value="{{test}}"/><br/></code>
-                    <label for="release">发布脚本:</label>
-                    <code><input name="release" class="form-control col-6" id="release" value="{{release}}"/><br/></code>
-                    构建条件：
-                    <code><label><select class="form-control " name="condition">
-                        <option value="0">随api请求</option>
-                        <option value="1">每天</option>
-                        <option value="3">每3天</option>
-                        <option value="7">每周</option>
-                    </select></label></code>
-                </div>
-                <button type="submit" class="btn btn-success">提交</button>
-            </form>
+        <div class="container my-4 py-5 ml-auto text-lg-center">
+            <code><label>
+                <textarea class="form-control form-control-sm" style="width: 800px;height: 300px">{{log}}</textarea>
+            </label></code>
+            <p><button class="btn btn-info" onclick="history.back(-1)">返回</button></p>
         </div>
         <script>narn()</script>
     </body>
